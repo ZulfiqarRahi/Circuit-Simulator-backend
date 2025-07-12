@@ -81,9 +81,13 @@ voltage_matrix[grnd - 1] = 0
 for source in sources.values():
     pos, neg, volt = source['pos'], source['neg'], source['volt']
     Lvolt = sp.laplace_transform(volt, t, s, noconds=False)
-    if pos != grnd:
-        voltage_matrix[pos - 1] = voltage_matrix[neg - 1] + Lvolt[0] if neg != grnd else Lvolt[0]
-
+   if pos != grnd:
+       if neg != grnd:
+        voltage_matrix[pos - 1] = voltage_matrix[neg - 1] + Lvolt[0]
+       else:
+         voltage_matrix[pos - 1] = Lvolt[0]
+   elif neg != grnd:
+        voltage_matrix[neg - 1] = -Lvolt       
 
 SupernodalAnalysis_matrix = sp.Matrix(num_sources, 1, lambda i, _: 0)
 
